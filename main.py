@@ -30,8 +30,15 @@ if __name__ == '__main__':
     fi;"""]
     simulation = GapFunction("Simulate", statements)
 
-    with open("simulation.g", "w") as file:
+    gap_file_name = "simulation.g"
+    with open(gap_file_name, "w") as file:
         file.write(str(simulation))
 
+    with open("gap_executor.sh", "w") as file:
+        file.write(f"""#!/bin/sh
+gap -r -b -q << EOI
+Read("{gap_file_name}");
+Simulate();
+EOI""")
     script_path = './gap_executor.sh'
     subprocess.run(['sh', script_path])
