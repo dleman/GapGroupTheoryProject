@@ -14,7 +14,16 @@ class GapFunction():
 end;
 """
 
-if __name__ == '__main__':
+class ShellScript():
+    def __init__(self, statements):
+        self.statements = statements
+
+    def __str__(self):
+        statement_literals = "\n".join(self.statements)
+        return f"""#!/bin/sh
+{statement_literals}""" 
+
+if __name__ == "__main__":
     rand1 = random.randrange(2, 14, 2)
     rand2 = random.randrange(2, 14, 2)
     statements = [
@@ -34,11 +43,15 @@ if __name__ == '__main__':
     with open(gap_file_name, "w") as file:
         file.write(str(simulation))
 
-    with open("gap_executor.sh", "w") as file:
-        file.write(f"""#!/bin/sh
-gap -r -b -q << EOI
-Read("{gap_file_name}");
-Simulate();
-EOI""")
-    script_path = './gap_executor.sh'
-    subprocess.run(['sh', script_path])
+    sh_statements = [
+        "gap -r -b -q << EOI",
+     f"""Read("{gap_file_name}");""",
+        "Simulate();",
+        "EOI"
+    ]
+    sh = ShellScript(sh_statements)
+    sh_file_name = "gap_executor.sh"
+    with open(sh_file_name, "w") as file:
+        file.write(str(sh))
+    script_path = f"./{sh_file_name}"
+    subprocess.run(["sh", script_path])
