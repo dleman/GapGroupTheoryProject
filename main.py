@@ -1,33 +1,34 @@
 import subprocess
 import random
 
-class GapSimulation():
-    def __init__(self, size1, size2):
-        self.size1, self.size2 = size1, size2
+class GapFunction():
+    def __init__(self, name, statements):
+        self.name = name
+        self.statements = statements
 
     def __str__(self):
+        statement_literals = "\n    ".join(self.statements)
         return f"""
-Simulate := function()
-    local G, H;
-
-    G := SymmetricGroup({self.size1});
-    H := SymmetricGroup({self.size2});
-
-    Print("G: ", G, "\\n");
-    Print("H: ", H, "\\n");
-
-    if IsSubgroup(G, H) then
-        Print("H is a subgroup of G.\\n");
-    else
-        Print("H is not a subgroup of G.\\n");
-    fi;
+{self.name} := function()
+    {statement_literals}
 end;
 """
 
 if __name__ == '__main__':
     rand1 = random.randrange(2, 14, 2)
     rand2 = random.randrange(2, 14, 2)
-    simulation = GapSimulation(rand1, rand2);
+    statements = [
+        "local G, H;",
+       f"G := SymmetricGroup({rand1});",
+       f"H := SymmetricGroup({rand2});",
+      """Print("G: ", G, "\\n");""",
+      """Print("H: ", H, "\\n");""",
+      """if IsSubgroup(G, H) then
+            Print("H is a subgroup of G.\\n");
+        else
+            Print("H is not a subgroup of G.\\n");
+    fi;"""]
+    simulation = GapFunction("Simulate", statements)
 
     with open("simulation.g", "w") as file:
         file.write(str(simulation))
