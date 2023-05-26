@@ -8,11 +8,9 @@ class GapFunction():
 
     def __str__(self):
         statement_literals = "\n    ".join(self.statements)
-        return f"""
-{self.name} := function()
+        return f"""{self.name} := function()
     {statement_literals}
-end;
-"""
+end;"""
 
 class ShellScript():
     def __init__(self, statements):
