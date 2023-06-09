@@ -1,2 +1,4 @@
 simulation.g
 gap_executor.sh
+.idea
+gap_output.txt
